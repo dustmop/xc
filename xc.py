@@ -6,7 +6,10 @@ def run():
     print('Usage: xc <num>')
     sys.exit(1)
   arg = sys.argv[1]
-  num = int(arg)
+  if arg[:2] == '0x':
+    num = int(arg[2:], 16)
+  else:
+    num = int(arg)
   print('0x%x   %d' % (num, num))
 
 
