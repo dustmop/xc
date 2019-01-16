@@ -10,9 +10,21 @@ def collect_values(args):
         left = vals.pop()
         right = parse_value(a)
         vals.append(left + right)
+      elif oper == '*':
+        left = vals.pop()
+        right = parse_value(a)
+        vals.append(left * right)
+      elif oper == '-':
+        left = vals.pop()
+        right = parse_value(a)
+        vals.append(left - right)
+      elif oper == '/':
+        left = vals.pop()
+        right = parse_value(a)
+        vals.append(left / right)
       oper = None
       continue
-    if a == '+':
+    if a in ['+', '*', '-', '/']:
       oper = a
     elif a == ',':
       pass
