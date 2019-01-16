@@ -34,6 +34,8 @@ def collect_values(args):
 
 
 def parse_value(arg):
+  if arg[-1] == ',':
+    arg = arg[:-1]
   if arg[0] == 'x':
     return int(arg[1:], 16)
   elif arg[0:2] == '0x':
