@@ -44,13 +44,16 @@ def parse_value(arg):
     return int(arg, 10)
 
 
-def get_max_width(vals):
-  max_width = 0
+def get_max_widths(vals):
+  max_dec = max_hex = 0
   for n in vals:
     text = '%d' % n
-    if len(text) > max_width:
-      max_width = len(text)
-  return max_width
+    if len(text) > max_dec:
+      max_dec = len(text)
+    text = '%x' % n
+    if len(text) > max_hex:
+      max_hex = len(text)
+  return max_dec, max_hex
 
 
 def run():
@@ -58,8 +61,8 @@ def run():
     print('Usage: xc <num>')
     sys.exit(1)
   vals = collect_values(sys.argv[1:])
-  max_width = get_max_width(vals)
-  print_template = '0x%0' + str(max_width) + 'x   %' + str(max_width) + 'd'
+  max_dec, max_hex = get_max_widths(vals)
+  print_template = '0x%0' + str(max_hex) + 'x   %' + str(max_dec) + 'd'
   for n in vals:
     print(print_template % (n, n))
 
