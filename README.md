@@ -22,7 +22,7 @@ A simple command-line calculator for mixed decimal / hexidecimal math.
 ```
 > xc 0x40 + 20
 
-0x54 84
+0x54   84
 ```
 
 # Install
