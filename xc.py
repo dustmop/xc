@@ -7,24 +7,21 @@ def collect_values(args):
   for a in args:
     if oper:
       if oper == '+':
-        left = vals.pop()
-        right = parse_value(a)
-        vals.append(left + right)
+        f = lambda x,y: x + y
       elif oper == '*':
-        left = vals.pop()
-        right = parse_value(a)
-        vals.append(left * right)
+        f = lambda x,y: x * y
       elif oper == '-':
-        left = vals.pop()
-        right = parse_value(a)
-        vals.append(left - right)
+        f = lambda x,y: x - y
       elif oper == '/':
-        left = vals.pop()
-        right = parse_value(a)
-        vals.append(left / right)
+        f = lambda x,y: x / y
+      elif oper == '**':
+        f = lambda x,y: x ** y
+      left = vals.pop()
+      right = parse_value(a)
+      vals.append(f(left, right))
       oper = None
       continue
-    if a in ['+', '*', '-', '/']:
+    if a in ['+', '*', '-', '/', '**']:
       oper = a
     elif a == ',':
       pass
