@@ -25,6 +25,12 @@ A simple command-line calculator for mixed decimal / hexidecimal math.
 0x54   84
 ```
 
+```
+> xc -0x21 \* 5
+
+0xff5b   -165
+```
+
 # Install
 
 ```
