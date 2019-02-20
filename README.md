@@ -1,6 +1,13 @@
 ## xc
 
-A tiny command-line calculator for mixed decimal / hexidecimal math.
+A tiny command-line calculator for mixed decimal / hexadecimal math.
+
+# Why
+
+Scratches two particular personal itches:
+
+* Kept opening a python REPL to do this and didn't want to
+* Could never remember how to use `bc`
 
 # Examples
 
@@ -33,9 +40,9 @@ A tiny command-line calculator for mixed decimal / hexidecimal math.
 
 `**` : exponentiation
 
-`0x12` : hexidecimal numbers
+`0x12` : hexadecimal numbers
 
-`-0x34` : negative hexidecimal numbers, displayed as unsigned values
+`-0x34` : negative hexadecimal numbers, displayed as unsigned values
 
 # Install
 
