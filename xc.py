@@ -61,11 +61,11 @@ def hex_unsigned(n):
   if n >= 0:
     return n
   ab = -n
-  if ab < 0x10:
+  if ab <= 0x10:
     return 0x100 - ab
-  elif ab < 0x100:
-    return 0x10000 - ab
-  return ab
+  else:
+    return 0x10**(2 + len('%x' % (ab - 1))) - ab
+
 
 def run():
   if len(sys.argv) < 2:
