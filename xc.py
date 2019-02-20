@@ -1,9 +1,11 @@
+import os
 import sys
 
 
 def collect_values(args):
   oper = None
   vals = []
+  errs = []
   for a in args:
     if oper:
       if oper == '+':
@@ -17,7 +19,12 @@ def collect_values(args):
       elif oper == '**':
         f = lambda x,y: x ** y
       left = vals.pop()
-      right = parse_value(a)
+      try:
+        right = parse_value(a)
+      except ValueError:
+        errs.append({'message': 'Failed to parse "%s"' % a, 'detail': a})
+        vals.append(0)
+        continue
       vals.append(f(left, right))
       oper = None
       continue
@@ -26,8 +33,12 @@ def collect_values(args):
     elif a == ',':
       pass
     else:
-      vals.append(parse_value(a))
-  return vals
+      try:
+        vals.append(parse_value(a))
+      except ValueError:
+        errs.append({'message': 'Failed to parse "%s"' % a, 'detail': a})
+        vals.append(0)
+  return vals, errs
 
 
 def parse_value(arg):
@@ -67,11 +78,26 @@ def hex_unsigned(n):
     return 0x10**(2 + len('%x' % (ab - 1))) - ab
 
 
+def files_in_dir(path):
+  return os.listdir(path)
+
+
 def run():
   if len(sys.argv) < 2:
     print('Usage: xc <num>')
     sys.exit(1)
-  vals = collect_values(sys.argv[1:])
+  (vals, errs) = collect_values(sys.argv[1:])
+  if errs:
+    files = files_in_dir('.')
+    skip_found_files = False
+    for e in errs:
+      if skip_found_files and e['detail'] in files:
+        continue
+      sys.stderr.write(e['message'] + '\n')
+      if e['detail'] in files:
+        sys.stderr.write('Escape * using a backslash, like \\*\n')
+        skip_found_files = True
+    sys.exit(1)
   max_dec, max_hex = get_max_widths(vals)
   print_template = '0x%0' + str(max_hex) + 'x   %' + str(max_dec) + 'd'
   for n in vals:
