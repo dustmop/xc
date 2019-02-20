@@ -1,13 +1,13 @@
 ## xc
 
-A simple command-line calculator for mixed decimal / hexidecimal math.
+A tiny command-line calculator for mixed decimal / hexidecimal math.
 
 # Examples
 
 ```
-> xc 12
+> xc 0x40 + 20
 
-0xc   12
+0x54   84
 ```
 
 ```
@@ -20,16 +20,22 @@ A simple command-line calculator for mixed decimal / hexidecimal math.
 ```
 
 ```
-> xc 0x40 + 20
-
-0x54   84
-```
-
-```
 > xc -0x21 \* 5
 
 0xff5b   -165
 ```
+
+# Supported:
+
+`+`, `-` : addition, subtraction
+
+`*`, `/` : multiplication, division (make sure to escape `*` on the command-line)
+
+`**` : exponentiation
+
+`0x12` : hexidecimal numbers
+
+`-0x34` : negative hexidecimal numbers, displayed as unsigned values
 
 # Install
 
