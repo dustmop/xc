@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 
@@ -15,7 +16,7 @@ def collect_values(args):
       elif oper == '-':
         f = lambda x,y: x - y
       elif oper == '/':
-        f = lambda x,y: x / y
+        f = lambda x,y: (1.0 * x) / y
       elif oper == '**':
         f = lambda x,y: x ** y
       left = vals.pop()
@@ -52,6 +53,8 @@ def parse_value(arg):
     return -int(arg[2:], 16)
   elif arg[0:3] == '-0x':
     return -int(arg[3:], 16)
+  elif '.' in arg:
+    return float(arg)
   else:
     return int(arg, 10)
 
@@ -101,6 +104,12 @@ def run():
   max_dec, max_hex = get_max_widths(vals)
   print_template = '0x%0' + str(max_hex) + 'x   %' + str(max_dec) + 'd'
   for n in vals:
+    if isinstance(n, float):
+      if math.fabs(n - math.floor(n)) < 0.0001:
+        n = int(n)
+      else:
+        print('%s' % n)
+        continue
     print(print_template % (hex_unsigned(n), n))
 
 
