@@ -64,10 +64,26 @@ class XCTests(unittest.TestCase):
     self.assertEqual(errs, [])
     self.assertEqual(vals, [35.7])
 
+  def test_same_precedence(self):
+    (vals, errs) = xc.collect_values(['203', '+', '142', '+', '7'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [352])
+
+  def test_higher_precedence(self):
+    (vals, errs) = xc.collect_values(['203', '+', '142', '*', '7'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [1197])
+
+  def test_lower_precedence(self):
+    (vals, errs) = xc.collect_values(['203', '*', '142', '+', '7'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [28833])
+
 
 # TODO:
 # padding
 # display hex and dec, correct width
+# test errors
 
 
 if __name__ == '__main__':
