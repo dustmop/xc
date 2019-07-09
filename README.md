@@ -1,13 +1,12 @@
 ## xc
 
-A tiny command-line calculator for mixed decimal / hexadecimal math.
+A tiny command-line calculator for mixed decimal / hexadecimal math. It is focused on ease of use and convenience.
 
-# Why
+# Install
 
-Scratches two particular personal itches:
-
-* Kept opening a python REPL to do this and didn't want to
-* Could never remember how to use `bc`
+```
+pip install xc
+```
 
 # Examples
 
@@ -43,9 +42,3 @@ Scratches two particular personal itches:
 `0x12` : hexadecimal numbers
 
 `-0x34` : negative hexadecimal numbers, displayed as unsigned values
-
-# Install
-
-```
-alias xc=`python xc.py`
-```
