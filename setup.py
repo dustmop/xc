@@ -1,6 +1,6 @@
 import setuptools
 
-long_description = """xc is a simple calculator meant to be used entirely from the command-line. It automatically displays results in both decimal and hexidecimal. It is focused on convenience and ease of use."""
+long_description = """xc is a simple calculator meant to be used entirely from the command-line. It automatically displays results in both decimal and hexadecimal. It is focused on convenience and ease of use."""
 
 __version__ = '0.8'
 
@@ -15,5 +15,5 @@ setuptools.setup(
     scripts=['bin/xc'],
     packages=[''],
     license='GPL3',
-    keywords='hex hexidecimal calc calculator command-line commandline',
+    keywords='hex hexadecimal calc calculator command-line commandline',
 )

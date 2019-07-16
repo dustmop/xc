@@ -152,7 +152,32 @@ def files_in_dir(path):
 
 def run():
   if len(sys.argv) < 2:
-    print('Usage: xc <num>')
+    print("""Usage: xc <inputs>
+
+  inputs: Any series of numbers (decimal or hex) with arithemetic operators.
+          Numbers will be displayed in both decimal and hex, and arithmetic
+          operators will be applied according to standard precendence.
+
+  Operators: +, -   addition, subtraction
+             *, /   multiply, divide (you may need to escape multiply like \*)
+             **     exponentiation
+
+  Numbers:   123         decimal
+             -456        negative
+             0xa4, xa4   hexadecimal
+
+  Examples:
+  > xc 0x40 + 20
+  0x54 84
+
+  > xc 10 0x10 100 0x100
+  0x00a    10
+  0x010    16
+  0x064   100
+  0x100   256
+
+  > xc -0x21 \* 5
+  0xff56   -165""")
     sys.exit(1)
   (vals, errs) = collect_values(sys.argv[1:])
   if errs:
