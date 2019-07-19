@@ -4,8 +4,11 @@ import sys
 
 
 class Elem(object):
-  def __init__(self, val, func, prec):
+  """Elem represents some kind of element: a value, or an operator"""
+
+  def __init__(self, val, name, func, prec):
     self.val = val
+    self.name = name
     self.func = func
     self.prec = prec
 
@@ -13,13 +16,22 @@ class Elem(object):
     return self.val is not None
 
   def calculate(self, left, right):
-    return Elem(self.func(left.num(), right.num()), None, None)
+    return Elem(self.func(left.num(), right.num()), None, None, None)
 
   def num(self):
     return self.val
 
+  def str(self):
+    if self.is_value():
+      return self.val
+    return self.name
+
   def higher_precedence(self, other):
     return self.prec > other.prec
+
+  def __repr__(self):
+    return '#<Elem val=%s name=%s func=%s prec=%s>' % (
+      self.val, self.name, '#func' if self.func else None, self.prec)
 
 
 def arg_to_elem(arg):
@@ -39,11 +51,11 @@ def arg_to_elem(arg):
     elif arg == '**':
       f = lambda x,y: x ** y
       p = 3
-    return Elem(None, f, p)
+    return Elem(None, arg, f, p)
   if arg == ',':
     return None
   v = parse_value(arg)
-  return Elem(v, None, 0)
+  return Elem(v, None, None, 0)
 
 
 def collect_values(args):
@@ -68,6 +80,7 @@ def collect_values(args):
       e = arg_to_elem(a)
     except ValueError:
       errs.append({'message': 'Failed to parse "%s"' % a, 'detail': a})
+      toper = None
       stack = []
       continue
     if e is None:
@@ -80,13 +93,17 @@ def collect_values(args):
       continue
     if toper is None:
       # No operator in the stack
+      if not stack:
+        errs.append({'message': 'Operator missing left hand size "%s"' % a,
+                     'detail': a})
+        continue
       stack.append(e)
       toper = len(stack) - 1
       continue
     if toper == len(stack) - 1:
       # Top of stack is an operator, error
-      errs.append({'message': 'Syntax error %s %s' % (stack[-1].str(), e.str()),
-                   'detail': e.str()})
+      errs.append({'message': 'Syntax error: "%s %s"' % (
+        stack[-1].str(), e.str()), 'detail': e.str()})
       stack = []
       continue
     # Operator already in stack, check precedence

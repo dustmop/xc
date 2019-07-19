@@ -79,6 +79,22 @@ class XCTests(unittest.TestCase):
     self.assertEqual(errs, [])
     self.assertEqual(vals, [28833])
 
+  def test_syntax_error(self):
+    (vals, errs) = xc.collect_values(['203', '+', '+', '142'])
+    self.assertEqual(errs, [{'message': 'Syntax error: "+ +"', 'detail': '+'}])
+    self.assertEqual(vals, [142])
+
+  def test_empty_stack_error(self):
+    (vals, errs) = xc.collect_values(['+', '142'])
+    self.assertEqual(errs, [{'message': 'Operator missing left hand size "+"',
+                             'detail': '+'}])
+    self.assertEqual(vals, [142])
+
+  def test_parse_error(self):
+    (vals, errs) = xc.collect_values(['203', '+', '&', '142'])
+    self.assertEqual(errs, [{'message': 'Failed to parse "&"', 'detail': '&'}])
+    self.assertEqual(vals, [142])
+
 
 # TODO:
 # padding
