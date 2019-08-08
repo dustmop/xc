@@ -92,6 +92,7 @@ def collect_values(args):
       # If top of stack is not an operator, two values in a row.
       if toper != len(stack) - 1:
         flush_stack()
+        toper = None
       stack.append(e)
       continue
     if toper is None:

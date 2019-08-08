@@ -100,6 +100,11 @@ class XCTests(unittest.TestCase):
     self.assertEqual(errs, [])
     self.assertEqual(vals, [816])
 
+  def test_multiple_operators(self):
+    (vals, errs) = xc.collect_values(['3', '+', '4', '5', '+', '6'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [7, 11])
+
 
 # TODO:
 # padding
