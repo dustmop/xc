@@ -90,10 +90,15 @@ class XCTests(unittest.TestCase):
                              'detail': '+'}])
     self.assertEqual(vals, [142])
 
-  def test_parse_error(self):
-    (vals, errs) = xc.collect_values(['203', '+', '&', '142'])
-    self.assertEqual(errs, [{'message': 'Failed to parse "&"', 'detail': '&'}])
-    self.assertEqual(vals, [142])
+  def test_spaces_in_args(self):
+    (vals, errs) = xc.collect_values(['203 + 142'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [345])
+
+  def test_mixed_spaces(self):
+    (vals, errs) = xc.collect_values(['123', '+', '203 + 142', ' + 348'])
+    self.assertEqual(errs, [])
+    self.assertEqual(vals, [816])
 
 
 # TODO:

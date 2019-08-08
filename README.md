@@ -31,6 +31,12 @@ pip install xc
 0xff5b   -165
 ```
 
+```
+> xc '123 * 345'
+
+0xa5c3   42435
+```
+
 # Supported:
 
 `+`, `-` : addition, subtraction

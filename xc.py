@@ -59,6 +59,9 @@ def arg_to_elem(arg):
 
 
 def collect_values(args):
+  # Expand any arguments with spaces (quoted on command-line).
+  args = [each for a in args for each in a.split(' ') if each]
+  # Stack and other things for expression handling.
   toper = None
   vals = []
   errs = []
@@ -194,7 +197,10 @@ def run():
   0x100   256
 
   > xc -0x21 \* 5
-  0xff56   -165""")
+  0xff56   -165
+
+  > xc '123 + 345'
+  0x1d4   468""")
     sys.exit(1)
   (vals, errs) = collect_values(sys.argv[1:])
   if errs:
