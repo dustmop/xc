@@ -159,12 +159,12 @@ def get_max_widths(vals):
 
 def hex_unsigned(n):
   if n >= 0:
-    return n
+    return int(n)
   ab = -n
   if ab <= 0x10:
-    return 0x100 - ab
+    return int(0x100 - ab)
   else:
-    return 0x10**(2 + len('%x' % (ab - 1))) - ab
+    return int(0x10**(2 + len('%x' % (ab - 1))) - ab)
 
 
 def files_in_dir(path):
