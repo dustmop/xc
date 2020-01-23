@@ -2,7 +2,7 @@ import setuptools
 
 long_description = """xc is a simple calculator meant to be used entirely from the command-line. It automatically displays results in both decimal and hexadecimal. It is focused on convenience and ease of use."""
 
-__version__ = '0.8'
+__version__ = '0.9'
 
 setuptools.setup(
     name='xc',
