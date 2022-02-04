@@ -78,12 +78,12 @@ def collect_values(args):
       result = op.calculate(left, result)
     vals.append(result.num())
   # Retrieve flags
-  flags = {}
+  flags = set()
   if len(args) > 0 and args[0] == '-d':
-    flags['dec'] = True
+    flags.add('dec')
     args = args[1:]
   if len(args) > 0 and args[0] == '-x':
-    flags['hex'] = True
+    flags.add('hex')
     args = args[1:]
   # Iterate over the arguments
   for a in args:
@@ -234,9 +234,9 @@ def run():
     sys.exit(1)
   max_dec, max_hex = get_max_widths(vals)
   show_template = '0x{hex:' + str(max_hex) + 'x}   {dec:' + str(max_dec) + 'd}'
-  if flags.get('dec'):
+  if 'dec' in flags:
     show_template = '{dec:' + str(max_dec) + 'd}'
-  if flags.get('hex'):
+  if 'hex' in flags:
     show_template = '{hex:' + str(max_hex) + 'x}'
   for n in vals:
     if isinstance(n, float):
