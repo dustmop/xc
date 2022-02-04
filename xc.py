@@ -30,7 +30,7 @@ class Elem(object):
     return self.prec > other.prec
 
   def __repr__(self):
-    return '#<Elem val=%s name=%s func=%s prec=%s>' % (
+    return '#<Elem val=%s name=%s func=%s prec=%s>'.format(
       self.val, self.name, '#func' if self.func else None, self.prec)
 
 
@@ -77,12 +77,21 @@ def collect_values(args):
       left = stack.pop()
       result = op.calculate(left, result)
     vals.append(result.num())
+  # Retrieve flags
+  flags = {}
+  if len(args) > 0 and args[0] == '-d':
+    flags['dec'] = True
+    args = args[1:]
+  if len(args) > 0 and args[0] == '-x':
+    flags['hex'] = True
+    args = args[1:]
   # Iterate over the arguments
   for a in args:
     try:
       e = arg_to_elem(a)
     except ValueError:
-      errs.append({'message': 'Failed to parse "%s"' % a, 'detail': a})
+      errs.append({'kind': 'parse',
+                   'message': 'Failed to parse "{}"'.format(a), 'detail': a})
       toper = None
       stack = []
       continue
@@ -98,16 +107,16 @@ def collect_values(args):
     if toper is None:
       # No operator in the stack
       if not stack:
-        errs.append({'message': 'Operator missing left hand size "%s"' % a,
-                     'detail': a})
+        msg = 'Operator missing left hand size "{}"'.format(a)
+        errs.append({'kind': 'no-op', 'message': msg, 'detail': a})
         continue
       stack.append(e)
       toper = len(stack) - 1
       continue
     if toper == len(stack) - 1:
       # Top of stack is an operator, error
-      errs.append({'message': 'Syntax error: "%s %s"' % (
-        stack[-1].str(), e.str()), 'detail': e.str()})
+      msg = 'Syntax error: "{} {}"'.format(stack[-1].str(), e.str())
+      errs.append({'kind': 'syntax', 'message': msg, 'detail': e.str()})
       stack = []
       continue
     # Operator already in stack, check precedence
@@ -125,7 +134,7 @@ def collect_values(args):
     toper = len(stack) - 1
     continue
   flush_stack()
-  return vals, errs
+  return vals, flags, errs
 
 
 def parse_value(arg):
@@ -148,10 +157,10 @@ def parse_value(arg):
 def get_max_widths(vals):
   max_dec = max_hex = 0
   for n in vals:
-    text = '%d' % n
+    text = '{}'.format(n)
     if len(text) > max_dec:
       max_dec = len(text)
-    text = '%x' % hex_unsigned(n)
+    text = '{:x}'.format(hex_unsigned(n))
     if len(text) > max_hex:
       max_hex = len(text)
   return max_dec, max_hex
@@ -164,11 +173,24 @@ def hex_unsigned(n):
   if ab <= 0x10:
     return int(0x100 - ab)
   else:
-    return int(0x10**(2 + len('%x' % (ab - 1))) - ab)
+    return int(0x10**(2 + len('{:x}'.format(ab - 1))) - ab)
 
 
 def files_in_dir(path):
   return os.listdir(path)
+
+
+def is_filefound_error(e, files):
+  return e['kind'] == 'parse' and e['detail'] in files
+
+
+def display_errors(errs):
+  files = files_in_dir('.')
+  for e in errs:
+    sys.stderr.write(e['message'] + '\n')
+    if is_filefound_error(e, files):
+      sys.stderr.write('Escape * using a backslash, like \\*\n')
+      return
 
 
 def run():
@@ -178,6 +200,9 @@ def run():
   inputs: Any series of numbers (decimal or hex) with arithemetic operators.
           Numbers will be displayed in both decimal and hex, and arithmetic
           operators will be applied according to standard precendence.
+
+  Flags:     -x     output hexadecimal only (with no prefix)
+             -d     output decimal only
 
   Operators: +, -   addition, subtraction
              *, /   multiply, divide (you may need to escape multiply like \*)
@@ -203,28 +228,24 @@ def run():
   > xc '123 + 345'
   0x1d4   468""")
     sys.exit(1)
-  (vals, errs) = collect_values(sys.argv[1:])
+  (vals, flags, errs) = collect_values(sys.argv[1:])
   if errs:
-    files = files_in_dir('.')
-    skip_found_files = False
-    for e in errs:
-      if skip_found_files and e['detail'] in files:
-        continue
-      sys.stderr.write(e['message'] + '\n')
-      if e['detail'] in files:
-        sys.stderr.write('Escape * using a backslash, like \\*\n')
-        skip_found_files = True
+    display_errors(errs)
     sys.exit(1)
   max_dec, max_hex = get_max_widths(vals)
-  print_template = '0x%0' + str(max_hex) + 'x   %' + str(max_dec) + 'd'
+  show_template = '0x{hex:' + str(max_hex) + 'x}   {dec:' + str(max_dec) + 'd}'
+  if flags.get('dec'):
+    show_template = '{dec:' + str(max_dec) + 'd}'
+  if flags.get('hex'):
+    show_template = '{hex:' + str(max_hex) + 'x}'
   for n in vals:
     if isinstance(n, float):
       if math.fabs(n - math.floor(n)) < 0.0001:
         n = int(n)
       else:
-        print('%s' % n)
+        print('{}'.format(n))
         continue
-    print(print_template % (hex_unsigned(n), n))
+    print(show_template.format(hex=hex_unsigned(n), dec=n))
 
 
 if __name__ == '__main__':

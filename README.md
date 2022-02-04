@@ -32,12 +32,18 @@ pip install xc
 ```
 
 ```
-> xc '123 * 345'
+> xc -x '123 * 345'
 
-0xa5c3   42435
+a5c3
 ```
 
-# Supported:
+# Flags
+
+`-x` Only output hexadecimal (with no prefix)
+
+`-d` Only output decimal
+
+# Supported
 
 `+`, `-` : addition, subtraction
 
